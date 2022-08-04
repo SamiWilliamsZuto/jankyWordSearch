@@ -1,0 +1,23 @@
+﻿/*
+Show selected buttons (from user clicking)
+Populate grid with random letters
+Store array of words (in code)
+Show a subset of the words in a list for the user to find
+Store a list of buttons currently selected
+Button to clear selected buttons, and restore unclicked state
+Put a word from the array into the grid (right to left horizontal)
+Put a word from the array right to left (backwards horizontal)
+Allow user to complete a word by selecting in the grid, mark complete in list
+Show win screen when all words completed
+Read words from textfile
+Prevent a word being overwritten by another word
+Put a word from the array up to down (forwards vertical)
+Put a word from the array down to up (backwards vertical)
+Diagonal words
+Add hint system that highlights a letter of a word to help user
+Allow words to share letters
+Add difficultly selector (hard mode = words not in list, more diagonal and backwards words, bigger grid with same amount of words, add partial words like CACT (missing the US) to misdirect the user)
+Make a number search
+*/
+
+
