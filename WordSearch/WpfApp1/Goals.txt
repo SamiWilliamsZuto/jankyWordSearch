@@ -1,11 +1,20 @@
 ﻿/*
-Show selected buttons (from user clicking)
-Populate grid with random letters
-Store array of words (in code)
-Show a subset of the words in a list for the user to find
+Show selected buttons (from user clicking) [x]
+
+Populate grid with random letters [x]
+
+Store array of words (in code) [x]
+
+Show a subset of the words in a list for the user to find [x]
+
+Show a random selection of words from the list [x]
+
 Store a list of buttons currently selected
+
 Button to clear selected buttons, and restore unclicked state
+
 Put a word from the array into the grid (right to left horizontal)
+
 Put a word from the array right to left (backwards horizontal)
 Allow user to complete a word by selecting in the grid, mark complete in list
 Show win screen when all words completed
