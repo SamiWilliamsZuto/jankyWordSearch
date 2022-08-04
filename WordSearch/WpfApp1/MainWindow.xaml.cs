@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -13,11 +16,13 @@ namespace WpfApp1
     {
         private const int MaxWords = 4;
         private readonly string[] _words = { "Cat", "Dog", "Worm", "Sausage", "Potato", "Porridge", "Towel", "Rotisserie", "Gym", "Tinder" };
-        
+        private List<ButtonInGrid> _userClickedButtons;
+
         public MainWindow()
         {
             InitializeComponent();
-
+            
+            _userClickedButtons = new List<ButtonInGrid>();
             CreateLabels();
             CreateButtons();
         }
@@ -34,7 +39,7 @@ namespace WpfApp1
                     Button btn = new Button
                     {
                         Name = $"button{x}{y}",
-                        Tag = $"button {x},{y}",
+                        Tag = new Point(x, y),
                         Content = GenerateRandomChar(),
                         Height = buttonHeight,
                         Width = buttonWidth,
@@ -87,8 +92,13 @@ namespace WpfApp1
         {
             Console.WriteLine($"You clicked on the {(sender as Button)?.Tag}. button.");
 
-            if (sender is Button button) 
+            if (sender is Button button)
+            {
                 button.Background = new SolidColorBrush(Color.FromRgb(0, 255, 0));
+                _userClickedButtons.Add(new ButtonInGrid((char)button.Content, new Point((button.Tag as Point)!.X, (button.Tag as Point)!.Y)));
+            }
+
+            Console.WriteLine(JsonSerializer.Serialize(_userClickedButtons));
         }
     }
 }

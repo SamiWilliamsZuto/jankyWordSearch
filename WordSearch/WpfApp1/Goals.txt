@@ -9,9 +9,11 @@ Show a subset of the words in a list for the user to find [x]
 
 Show a random selection of words from the list [x]
 
-Store a list of buttons currently selected
+Store a list of buttons currently selected [x]
 
 Button to clear selected buttons, and restore unclicked state
+
+Unselect letter when user clicks same letter again
 
 Put a word from the array into the grid (right to left horizontal)
 
