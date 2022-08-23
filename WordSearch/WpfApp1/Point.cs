@@ -1,6 +1,6 @@
 ﻿namespace WpfApp1;
 
-public class Point
+public record Point
 {
     public int X { get; private set; }
     public int Y{ get; private set; }

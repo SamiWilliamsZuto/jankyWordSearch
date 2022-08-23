@@ -17,6 +17,7 @@ namespace WpfApp1
         private const int MaxWords = 4;
         private const int GridWidth = 10;
         private const int GridHeight = 10;
+        private readonly Color _grey = Color.FromRgb(221, 221, 221);
         
         private readonly string[] _words = { "Cat", "Dog", "Worm", "Sausage", "Potato", "Porridge", "Towel", "Rotisserie", "Gym", "Tinder" };
         private List<ButtonInGrid> _userClickedButtons;
@@ -122,9 +123,22 @@ namespace WpfApp1
 
             if (sender is Button button)
             {
-                button.Background = new SolidColorBrush(Color.FromRgb(0, 255, 0));
-                _userClickedButtons.Add(_gridButtonsArray[(button.Tag as Point)!.X, (button.Tag as Point)!.Y]);
+                Point buttonLocation = new Point((button.Tag as Point)!.X, (button.Tag as Point)!.Y);
+                var isButtonClicked = _userClickedButtons.FirstOrDefault(x => x.Point == buttonLocation);
+                if (isButtonClicked != null)
+                {
+                    
+                    button.Background = new SolidColorBrush(_grey);
+                    _userClickedButtons.Remove(isButtonClicked);
+                }
+                else
+                {
+                    button.Background = new SolidColorBrush(Color.FromRgb(0, 255, 0));
+                    _userClickedButtons.Add(_gridButtonsArray[buttonLocation.X, buttonLocation.Y]);
+                }
             }
+
+            Console.WriteLine(JsonSerializer.Serialize(_userClickedButtons.Select(x => x.Point)));
         }
         
         void clear_Button_Click(object sender, RoutedEventArgs e)
@@ -136,7 +150,7 @@ namespace WpfApp1
                 _userClickedButtons.Clear();
                 foreach (var gridButton in _gridButtonsArray)
                 {
-                    gridButton.Button.Background = new SolidColorBrush(Color.FromRgb(221, 221, 221));
+                    gridButton.Button.Background = new SolidColorBrush(_grey);
                     
                 }
             }

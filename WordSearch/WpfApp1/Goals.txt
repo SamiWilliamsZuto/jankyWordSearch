@@ -11,9 +11,9 @@ Show a random selection of words from the list [x]
 
 Store a list of buttons currently selected [x]
 
-Button to clear selected buttons, and restore unclicked state
+Button to clear selected buttons, and restore unclicked state [x]
 
-Unselect letter when user clicks same letter again
+Unselect letter when user clicks same letter again [x]
 
 Put a word from the array into the grid (right to left horizontal)
 
