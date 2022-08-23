@@ -15,26 +15,32 @@ namespace WpfApp1
     public partial class MainWindow : Window
     {
         private const int MaxWords = 4;
+        private const int GridWidth = 10;
+        private const int GridHeight = 10;
+        
         private readonly string[] _words = { "Cat", "Dog", "Worm", "Sausage", "Potato", "Porridge", "Towel", "Rotisserie", "Gym", "Tinder" };
         private List<ButtonInGrid> _userClickedButtons;
+        private ButtonInGrid[,] _gridButtonsArray; 
 
         public MainWindow()
         {
             InitializeComponent();
             
             _userClickedButtons = new List<ButtonInGrid>();
+            _gridButtonsArray = new ButtonInGrid[GridWidth, GridHeight];
             CreateLabels();
-            CreateButtons();
+            CreateGridButtons();
+            CreateClearButton();
         }
 
-        private void CreateButtons()
+        private void CreateGridButtons()
         {
             const int buttonWidth = 64;
             const int buttonHeight = 64;
-
-            for (int x = 0; x < 10; x++)
+            
+            for (int x = 0; x < GridWidth; x++)
             {
-                for (int y = 0; y < 10; y++)
+                for (int y = 0; y < GridHeight; y++)
                 {
                     Button btn = new Button
                     {
@@ -47,13 +53,35 @@ namespace WpfApp1
                         FontSize = 12,
                         BorderThickness = new Thickness(4)
                     };
-                    btn.Click += button_Click;
+                    btn.Click += grid_Button_Click;
+
+                    _gridButtonsArray[x, y] = new ButtonInGrid((char)btn.Content, new Point(x, y), btn);
 
                     ButtonCanvas.Children.Add(btn);
                     Canvas.SetLeft(btn, x * buttonWidth + 10);
                     Canvas.SetTop(btn, y * buttonHeight + 10);
                 }
             }
+        }
+
+        private void CreateClearButton()
+        {
+            Button btn = new Button
+            {
+                Name = "clearButton",
+                Content = "Clear Selection",
+                Height = 64,
+                Width = 128,
+                Background = new SolidColorBrush(Color.FromRgb(255, 51, 51)),
+                FontSize = 12,
+                BorderThickness = new Thickness(4)
+            };
+            
+            btn.Click += clear_Button_Click;
+            
+            ButtonCanvas.Children.Add(btn);
+            Canvas.SetLeft(btn, 10);
+            Canvas.SetTop(btn, 700);
         }
 
         public void CreateLabels()
@@ -88,14 +116,29 @@ namespace WpfApp1
             return (char) randomChar;
         }
 
-        void button_Click(object sender, RoutedEventArgs e)
+        void grid_Button_Click(object sender, RoutedEventArgs e)
         {
             Console.WriteLine($"You clicked on the {(sender as Button)?.Tag}. button.");
 
             if (sender is Button button)
             {
                 button.Background = new SolidColorBrush(Color.FromRgb(0, 255, 0));
-                _userClickedButtons.Add(new ButtonInGrid((char)button.Content, new Point((button.Tag as Point)!.X, (button.Tag as Point)!.Y)));
+                _userClickedButtons.Add(_gridButtonsArray[(button.Tag as Point)!.X, (button.Tag as Point)!.Y]);
+            }
+        }
+        
+        void clear_Button_Click(object sender, RoutedEventArgs e)
+        {
+            Console.WriteLine("You clicked on the clear button.");
+
+            if (sender is Button button)
+            {
+                _userClickedButtons.Clear();
+                foreach (var gridButton in _gridButtonsArray)
+                {
+                    gridButton.Button.Background = new SolidColorBrush(Color.FromRgb(221, 221, 221));
+                    
+                }
             }
 
             Console.WriteLine(JsonSerializer.Serialize(_userClickedButtons));
