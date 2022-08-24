@@ -14,54 +14,29 @@ namespace WpfApp1
     /// </summary>
     public partial class MainWindow : Window
     {
-        private const int MaxWords = 4;
-        public const int GridWidth = 10;
-        public const int GridHeight = 10;
+        public const int MaxWords = 4;
+        
         private readonly Color _grey = Color.FromRgb(221, 221, 221);
         
         private readonly string[] _words = { "Cat", "Dog", "Worm", "Sausage", "Potato", "Porridge", "Towel", "Rotisserie", "Gym", "Tinder" };
         private List<ButtonInGrid> _userClickedButtons;
-        private ButtonInGrid[,] _gridButtonsArray;
         private UiCreator _uiCreator;
+        private GridGenerator _gridGenerator;
 
         public MainWindow()
         {
             InitializeComponent();
-            
+            _words = _words.Select(x => x.ToUpper()).ToArray();
             _userClickedButtons = new List<ButtonInGrid>();
-            _gridButtonsArray = new ButtonInGrid[GridWidth, GridHeight];
-            _uiCreator = new UiCreator(new RandomCharGenerator());
+            _uiCreator = new UiCreator();
+            _gridGenerator = new GridGenerator(new RandomCharGenerator());
+            _gridGenerator.GenerateGrid(_words);
 
-            CreateLabels();
-            _uiCreator.CreateGridButtons(ButtonCanvas, _gridButtonsArray, grid_Button_Click);
+            _uiCreator.CreateLabels(ButtonCanvas, _words);
+            _uiCreator.CreateGridButtons(ButtonCanvas, _gridGenerator.GridButtonsArray, grid_Button_Click);
             _uiCreator.CreateClearButton(ButtonCanvas, clear_Button_Click);
         }
 
-        public void CreateLabels()
-        {
-            var wordIds = new Tuple<float, string>[_words.Length];
-            
-            for (int i = 0; i < wordIds.Length; i++)
-            {
-                wordIds[i] = new Tuple<float, string>(new Random().NextSingle(), _words[i]);
-            }
-            
-            Array.Sort(wordIds);
-            
-            for (int i = 0; i < (wordIds.Length < MaxWords ? wordIds.Length : MaxWords); i++)
-            {
-                var label = new Label()
-                {
-                    Name = wordIds[i].Item2.ToUpper(),
-                    Content = wordIds[i].Item2.ToUpper()
-                };
-
-                ButtonCanvas.Children.Add(label);
-                Canvas.SetLeft(label, 845);
-                Canvas.SetTop(label, i * 14);
-            }
-        }
-        
         void grid_Button_Click(object sender, RoutedEventArgs e)
         {
             Console.WriteLine($"You clicked on the {(sender as Button)?.Tag}. button.");
@@ -78,7 +53,7 @@ namespace WpfApp1
                 else
                 {
                     button.Background = new SolidColorBrush(Color.FromRgb(0, 255, 0));
-                    _userClickedButtons.Add(_gridButtonsArray[buttonLocation.X, buttonLocation.Y]);
+                    _userClickedButtons.Add(_gridGenerator.GridButtonsArray[buttonLocation.X, buttonLocation.Y]);
                 }
             }
 
@@ -92,7 +67,7 @@ namespace WpfApp1
             if (sender is Button button)
             {
                 _userClickedButtons.Clear();
-                foreach (var gridButton in _gridButtonsArray)
+                foreach (var gridButton in _gridGenerator.GridButtonsArray)
                 {
                     gridButton.Button.Background = new SolidColorBrush(_grey);
                     
